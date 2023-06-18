@@ -3,10 +3,7 @@ import mongoose, { Schema} from 'mongoose';
 const contactSchema: Schema = new Schema({
     id: {
         type: Number,
-        default: Date.now,
-        required: true,
-        unique: true,
-        index: true
+        required: true
     },
     name: {
         type: String,
@@ -20,6 +17,13 @@ const contactSchema: Schema = new Schema({
         type: String,
         required: true
     }
+});
+
+contactSchema.index({
+    'id': "desc"
+});
+contactSchema.index({
+    'name': "text"
 });
 
 export const contactModel = mongoose.model('contact', contactSchema, 'contact');

@@ -15,7 +15,11 @@ const mongooseConnection = {
         const hostname = mongoConString.split('@')[1];
 
         mongoose
-          .connect(mongoConString!)
+          .connect(
+            mongoConString!,
+            {
+              autoIndex: true
+            })
           .then(() => {
             logger.success(`Mongoose connected to ${hostname} successfully`);
           })
