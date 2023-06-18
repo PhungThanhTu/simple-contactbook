@@ -49,7 +49,8 @@ router.get('/', async (req: Request, res: Response, next: NextFunction) => {
 
         const pagination: ITimestampLazyLoadingPagination = {
             limit: limit,
-            latestTimeStamp: lastTimeStamp
+            latestTimeStamp: lastTimeStamp,
+            
         }
 
         const query: LoadContacts = {
