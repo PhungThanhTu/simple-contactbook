@@ -1,72 +1,42 @@
-import localforage from "localforage";
 import axiosClient from "./axios/axiosClient";
 
 const DEFAULT_PAGINATION_LIMIT = 100;
 
 export async function getContacts(query) {
   const url = `/contact?l=${DEFAULT_PAGINATION_LIMIT}&s=${query}`;
-  let contacts = await axiosClient.get(url);
+  let contactsRequest = await axiosClient.get(url);
+  let contacts = contactsRequest.data.data;
+  console.log(contacts);
   if (!contacts) contacts = [];
 
   return contacts;
 }
 
-export async function createContact() {
-  await fakeNetwork();
-  let id = Math.random().toString(36).substring(2, 9);
-  let contact = { id, createdAt: Date.now() };
-  let contacts = await getContacts();
-  contacts.unshift(contact);
-  await set(contacts);
-  return contact;
+export async function createContact(contact) {
+  const url = `/contact/`
+  let contactResponse = await axiosClient.post(url, contact)
+  const result = contactResponse.data;
+  return result;
 }
 
 export async function getContact(id) {
-  await fakeNetwork(`contact:${id}`);
-  let contacts = await localforage.getItem("contacts");
-  let contact = contacts.find(contact => contact.id === id);
+  const url = `/contact/${id}`
+  let contactsResponse = await axiosClient.get(url);
+  let contact = contactsResponse.data;
   return contact ?? null;
 }
 
 export async function updateContact(id, updates) {
-  await fakeNetwork();
-  let contacts = await localforage.getItem("contacts");
-  let contact = contacts.find(contact => contact.id === id);
-  if (!contact) throw new Error("No contact found for", id);
-  Object.assign(contact, updates);
-  await set(contacts);
+  const url = `/contact/${id}`;
+  const contactUpdateResponse = await axiosClient.put(url,updates);
+  const contact = contactUpdateResponse.data;
   return contact;
 }
 
 export async function deleteContact(id) {
-  let contacts = await localforage.getItem("contacts");
-  let index = contacts.findIndex(contact => contact.id === id);
-  if (index > -1) {
-    contacts.splice(index, 1);
-    await set(contacts);
+  const url = `/contact/${id}`;
+  let contactDeleteResponse = await axiosClient.delete(url);
+  if(contactDeleteResponse.status === 200)
     return true;
-  }
   return false;
-}
-
-function set(contacts) {
-  return localforage.setItem("contacts", contacts);
-}
-
-// fake a cache so we don't slow down stuff we've already seen
-let fakeCache = {};
-
-async function fakeNetwork(key) {
-  if (!key) {
-    fakeCache = {};
-  }
-
-  if (fakeCache[key]) {
-    return;
-  }
-
-  fakeCache[key] = true;
-  return new Promise(res => {
-    setTimeout(res, Math.random() * 800);
-  });
 }

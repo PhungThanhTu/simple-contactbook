@@ -6,19 +6,21 @@ import {
   NavLink,
   useNavigation,
   useSubmit } from "react-router-dom";
-import { getContacts, createContact } from "../contact";
+import { getContacts } from "../contact";
 
 export async function loader({ request }) {
   const url = new URL(request.url);
-  const s = url.searchParams.get("s");
+  let s = url.searchParams.get("s");
+  if(!s) {
+    s = ''
+  }
   const contacts = await getContacts(s);
     return { contacts, s };
 }
 import { useEffect } from "react";
   
 export async function action() {
-    const contact = await createContact();
-    return redirect(`/contacts/${contact.id}/edit`);
+    return redirect(`/newContact/`);
 }
 
 export default function Root() {
@@ -86,14 +88,13 @@ export default function Root() {
                         : ""
                     }
                   >
-                    {contact.first || contact.last ? (
+                    {contact.name ? (
                       <>
-                        {contact.first} {contact.last}
+                        {contact.name}
                       </>
                     ) : (
                       <i>No Name</i>
                     )}{" "}
-                    {contact.favorite && <span>★</span>}
                   </NavLink>
                 </li>
               ))}

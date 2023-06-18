@@ -20,42 +20,37 @@ export default function Contact() {
     <div id="contact">
       <div>
         <img
-          key={contact.avatar}
-          src={contact.avatar || null}
+          key={contact.id}
+          src="https://i.natgeofe.com/k/09db0b0a-9ca5-47de-93a8-00bbb9a3a50d/ADULTS_CHINSTRAP_PENGUIN-PROFILES_KIDS_0123_square.jpg"
         />
       </div>
 
       <div>
         <h1>
-          {contact.first || contact.last ? (
+          {contact.name ? (
             <>
-              {contact.first} {contact.last}
+              {contact.name}
             </>
           ) : (
             <i>No Name</i>
           )}{" "}
-          <Favorite contact={contact} />
+          
         </h1>
 
-        {contact.twitter && (
+        {contact.email && (
           <p>
-            <a
-              target="_blank"
-              href={`https://twitter.com/${contact.twitter}`} rel="noreferrer"
-            >
-              {contact.twitter}
-            </a>
+              {contact.email}
           </p>
         )}
 
-        {contact.notes && <p>{contact.notes}</p>}
+        {contact.phoneNumber && <p>{contact.phoneNumber}</p>}
 
         <div>
           <Form action="edit">
             <button type="submit">Edit</button>
           </Form>
           <Form
-            method="post"
+            method="delete"
             action="destroy"
             onSubmit={(event) => {
               if (
@@ -72,25 +67,5 @@ export default function Contact() {
         </div>
       </div>
     </div>
-  );
-}
-
-function Favorite({ contact }) {
-  // yes, this is a `let` for later
-  let favorite = contact.favorite;
-  return (
-    <Form method="post">
-      <button
-        name="favorite"
-        value={favorite ? "false" : "true"}
-        aria-label={
-          favorite
-            ? "Remove from favorites"
-            : "Add to favorites"
-        }
-      >
-        {favorite ? "★" : "☆"}
-      </button>
-    </Form>
   );
 }

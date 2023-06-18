@@ -1,19 +1,18 @@
 import { 
   Form, 
-  useLoaderData,
   redirect,
   useNavigate } from "react-router-dom";
-import { updateContact } from "../contact";
+import { createContact } from "../contact";
 
-export async function action({ request, params }) {
+export async function action({ request }) {
   const formData = await request.formData();
-  const updates = Object.fromEntries(formData);
-  await updateContact(params.contactId, updates);
-  return redirect(`/contacts/${params.contactId}`);
+  const contact = Object.fromEntries(formData);
+  const result = await createContact(contact);
+  const id = result.id;
+  return redirect(`/contacts/${id}`);
 }
 
-export default function EditContact() {
-  const { contact } = useLoaderData();
+export default function CreateContact() {
   const navigate = useNavigate();
 
   return (
@@ -25,7 +24,6 @@ export default function EditContact() {
           aria-label="First name"
           type="text"
           name="name"
-          defaultValue={contact.name}
         />
       </p>
       <label>
@@ -34,7 +32,6 @@ export default function EditContact() {
           type="text"
           name="email"
           placeholder="test@gmail.com"
-          defaultValue={contact.email}
         />
       </label>
       <label>
@@ -44,7 +41,6 @@ export default function EditContact() {
           aria-label="Phone Number"
           type="text"
           name="phoneNumber"
-          defaultValue={contact.phoneNumber}
         />
       </label>
       <p>

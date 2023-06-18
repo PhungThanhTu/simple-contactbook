@@ -20,6 +20,11 @@ import {
 } from "./routes/destroy";
 import Index from "./routes/index";
 
+import CreateContact,
+{
+  action as createAction
+} from "./routes/create"; 
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -32,6 +37,11 @@ const router = createBrowserRouter([
         errorElement: <ErrorPage />,
         children: [
           { index: true, element: <Index /> },
+          {
+            path: "newContact",
+            element: <CreateContact />,
+            action: createAction
+          },
           {
             path: "contacts/:contactId",
             element: <Contact />,
