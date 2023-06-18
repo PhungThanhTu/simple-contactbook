@@ -1,6 +1,10 @@
 # Simple Contactbook
 React and Node simple contact book
 
+# Prerequisites
+NodeJS v18 LTS, please see the installation guide at: 
+[NodeJS page](https://nodejs.org)
+
 # Run the app
 
 Prepare environment variables:
