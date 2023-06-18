@@ -1,0 +1,32 @@
+@endpoint = http://localhost:7999
+
+GET {{endpoint}}
+
+###
+POST {{endpoint}}/contact/
+Content-Type: application/json
+
+{
+    "name": "Ho Dac Thien An",
+    "phoneNumber": "0999999997",
+    "email": "pthanhtai.dev@gmail.com"
+}
+
+###
+GET {{endpoint}}/contact?l=4
+
+###
+GET {{endpoint}}/contact/1687075145986
+
+###
+PUT {{endpoint}}/contact/1687075145986
+Content-Type: application/json
+
+{
+    "name": "Hoang Ngoc An",
+    "phoneNumber": "0999999997",
+    "email": "pthanhtai.dev@gmail.com"
+}
+
+###
+DELETE {{endpoint}}/contact/1687075145986
