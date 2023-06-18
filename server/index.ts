@@ -3,7 +3,8 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import mongooseConnection from './src/mongo/connection';
 import handleError from './src/middlewares/errorHandler.middleware';
-import contactRouter from './src/routes/contact'
+import contactRouter from './src/routes/contact';
+import morgan from 'morgan';
 
 
 dotenv.config();
@@ -15,6 +16,7 @@ mongooseConnection.init();
 
 app.use(cors());
 app.use(express.json());
+app.use(morgan('dev'));
 
 app.use('/contact', contactRouter);
 
