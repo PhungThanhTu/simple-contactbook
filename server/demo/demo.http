@@ -13,7 +13,7 @@ Content-Type: application/json
 }
 
 ###
-GET {{endpoint}}/contact?l=4
+GET {{endpoint}}/contact?l=2
 
 ###
 GET {{endpoint}}/contact/1687075145986
@@ -30,3 +30,6 @@ Content-Type: application/json
 
 ###
 DELETE {{endpoint}}/contact/1687075145986
+
+###
+GET {{endpoint}}/contact?l=2&t=1687088323187
