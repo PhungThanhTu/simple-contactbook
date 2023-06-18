@@ -14,6 +14,8 @@ const get = async (query: LoadContacts, pagination: ITimestampLazyLoadingPaginat
 
     let latestTimeStamp = pagination.latestTimeStamp;
 
+	logger.success(JSON.stringify(latestTimeStamp));
+
     if(!limit) {
 			const error = "Please specify the nunber of contacts to be queried"
 			logger.error(error);
@@ -34,26 +36,33 @@ const get = async (query: LoadContacts, pagination: ITimestampLazyLoadingPaginat
 				$options: 'i'
 			},
 			id: {
-				$lt: latestTimeStamp - 1
+				$lte: latestTimeStamp
 			}
 		};
 
 		const sortParams: Record<string, | 1 | -1 | {$meta: "textScore"}> = {
 			id: -1
 		}
-
+	
+	// fetch more contact
     const contacts = await model
 		.find(findParams)
     	.sort(sortParams)
-		.limit(limit)
+		.limit(limit + 1)
 		.select(CONTACT_SELECTED_FIELD);
-	const oldestContact = [...contacts].pop();
-	const nextTimeStamp = oldestContact?.id;
+
+	let nextTimeStamp = undefined;
+
+	if(contacts.length > limit)
+	{
+		nextTimeStamp = contacts.pop()?.id;
+	}
 
     return {
 		data: contacts,
 		limit: limit,
-		next: nextTimeStamp
+		next: nextTimeStamp,
+		prev: latestTimeStamp
 	};
 }
 
