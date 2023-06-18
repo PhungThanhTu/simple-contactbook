@@ -5,7 +5,8 @@ import {
   redirect, 
   NavLink,
   useNavigation,
-  useSubmit } from "react-router-dom";
+  useSubmit,
+  useSearchParams } from "react-router-dom";
 import { getContacts } from "../contact";
 
 export async function loader({ request }) {
@@ -14,8 +15,12 @@ export async function loader({ request }) {
   if(!s) {
     s = ''
   }
-  const contacts = await getContacts(s);
-    return { contacts, s };
+  let t = url.searchParams.get("t");
+  if(!t) {
+    t = ''
+  }
+  const {contacts, next, prev } = await getContacts(s,t);
+    return { contacts, s, next, prev};
 }
 import { useEffect } from "react";
   
@@ -23,16 +28,36 @@ export async function action() {
     return redirect(`/newContact/`);
 }
 
+
 export default function Root() {
-    const { contacts, s } = useLoaderData();
+    const { contacts, s, next, prev } = useLoaderData();
+    // eslint-disable-next-line no-unused-vars
+    const [ searchParams, setSearchParams] = useSearchParams();
     const navigation = useNavigation();
     const submit = useSubmit();
 
+    const nextPage = () => {
+      redirect('/');
+      console.log(next);
+      setSearchParams((params) => ({
+        ...params,
+        t: next
+      }))
+    };
+
+    const prevPage = () => {
+      console.log(prev);
+      setSearchParams((params) => ({
+        ...params,
+        t: ''
+      }))
+    };
+
     const searching =
     navigation.location &&
-    new URLSearchParams(navigation.location.search).has(
-      "q"
-    );
+    (new URLSearchParams(navigation.location.search).has(
+      "s"
+    ));
 
     useEffect(() => {
       document.getElementById("s").value = s;
@@ -41,7 +66,15 @@ export default function Root() {
     return (
       <>
         <div id="sidebar">
-          <h1>React Router Contacts</h1>
+          <div>
+            <button
+              onClick={() => prevPage()}
+            >Reset</button>
+            <button
+              disabled={!next}
+              onClick={() => nextPage()}
+            >Next</button>
+          </div>
           <div>
             <Form id="search-form" role="search">
               <input

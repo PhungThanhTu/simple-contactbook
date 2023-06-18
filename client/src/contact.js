@@ -1,15 +1,17 @@
 import axiosClient from "./axios/axiosClient";
 
-const DEFAULT_PAGINATION_LIMIT = 100;
+const DEFAULT_PAGINATION_LIMIT = 2;
 
-export async function getContacts(query) {
-  const url = `/contact?l=${DEFAULT_PAGINATION_LIMIT}&s=${query}`;
+export async function getContacts(query, nextCursor) {
+  const url = `/contact?l=${DEFAULT_PAGINATION_LIMIT}&s=${query}&t=${nextCursor}`;
   let contactsRequest = await axiosClient.get(url);
   let contacts = contactsRequest.data.data;
-  console.log(contacts);
+  const next = contactsRequest.data.next;
+  const prev = contactsRequest.data.prev;
+  console.log(contactsRequest);
   if (!contacts) contacts = [];
 
-  return contacts;
+  return {contacts, next, prev};
 }
 
 export async function createContact(contact) {
